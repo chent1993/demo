@@ -14,18 +14,34 @@ public class TestWeWork {
 
         app=new App();
         app.loginWithCookie();
+        /*String phone ="18888888885";
+        app.toContact().delete(phone);*/
     }
 
     @Test
-    public void  testStart(){
+    public void  add(){
 
 
-       String phone ="18888888888";
+       String phone ="18888888883";
         app.toMemberAdd().add(phone,phone,phone);
     }
 
+    @Test
+    public void delete(){
+        String phone ="18888888885";
+        app.toMemberAdd().add(phone,phone,phone).delete(phone);
+    }
+    @Test
+    public void deleteCurePage(){
+        app.toContact().deleteCurrentPage();
+    }
+
+    @Test
+    public void importFromFile(){
+        app.toContact().importFromFile();
+    }
     @AfterClass
     public static void  afterAll(){
-
+        app.quit();
     }
 }
