@@ -19,4 +19,12 @@ public class SearchPage extends BasePage{
         click(By.id("com.xueqiu.android:id/action_close"));
         return new App();
     }
+
+    public SearchPage addSearch(){
+        click(By.id("com.xueqiu.android:id/follow_btn"));
+        //有时不弹框
+        if (findElements(By.id("com.xueqiu.android:id/md_buttonDefaultNegative")).size()>0)
+        click(By.id("com.xueqiu.android:id/md_buttonDefaultNegative"));
+        return this;
+    }
 }

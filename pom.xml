@@ -36,7 +36,11 @@
         <version>5.5.2</version>
         <scope>test</scope>
     </dependency>
-
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-params</artifactId>
+        <version>5.5.2</version>
+    </dependency>
     <dependency>
         <groupId>io.qameta.allure</groupId>
         <artifactId>allure-junit4</artifactId>

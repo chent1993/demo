@@ -3,6 +3,7 @@ package appium.page;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StockPage extends BasePage{
@@ -16,17 +17,28 @@ public class StockPage extends BasePage{
         return this;
     }
 
-    public List<WebElement> getAllStocks(){
-        List<WebElement> stocks = driver.findElements(By.id("com.xueqiu.android:id/portfolio_stockName"));
+    public List<String> getAllStocks(){
+        //new WebDriverWait(driver,10);
+        /*try {
+            click(By.id("com.xueqiu.android:id/snb_tip_text"));
+        }catch (Exception e){
+        }*/
+        List<String> stockList=new ArrayList<>();
+        List<WebElement> stocks = findElements(By.id("com.xueqiu.android:id/portfolio_stockName"));
         for (WebElement element:stocks){
-            element.getText();
+            stockList.add(element.getText());
         }
-        return stocks;
+        return stockList;
     }
 
-    public  void  addDefultStocks(){
+    public  StockPage  addDefultStocks(){
         click(By.id("com.xueqiu.android:id/add_to_portfolio_stock"));
-       /* By by = By.xpath("//*[text()='加入自选股']");
-        click(by);*/
+       return this;
     }
+
+    public  SearchPage toSearch(){
+        click(By.id("com.xueqiu.android:id/action_search"));
+        return new SearchPage();
+    }
+
 }

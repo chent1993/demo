@@ -22,9 +22,12 @@ public class App extends BasePage{
         URL remoteUrl = new URL("http://127.0.0.1:4723/wd/hub");
 
         driver = new AndroidDriver(remoteUrl, desiredCapabilities);
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
-        //速度会比较慢
+       /* handleAlert();
+        new WebDriverWait(driver,30).until(ExpectedConditions.visibilityOfElementLocated(By.id("home_search")));*/
+
+       //速度会比较慢
         /*By adsLocator = By.id("xxx");
         List<WebElement> ads = driver.findElements(adsLocator);
         if (ads.size()>=1){
@@ -33,7 +36,11 @@ public class App extends BasePage{
 
         //显示等待
         new WebDriverWait(driver,30).until(
-                x->driver.getPageSource().contains("")
+               /* x->driver.getPageSource().contains("home_search")*/
+                x->{
+                    String xml = driver.getPageSource();
+                    return xml.contains("home_search");
+                }
         );
 
     }
@@ -50,4 +57,6 @@ public class App extends BasePage{
         click(By.xpath("//*[contains(@resource-id,'tab_name')and @text='自选']"));
         return new StockPage();
     }
+
+
 }
