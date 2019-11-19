@@ -15,7 +15,7 @@ public class TestWeWork {
         app=new App();
         app.loginWithCookie();
         /*String phone ="18888888885";
-        app.toContact().delete(phone);*/
+        appium.toContact().delete(phone);*/
     }
 
     @Test

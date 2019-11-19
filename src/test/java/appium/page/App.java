@@ -1,7 +1,6 @@
 package appium.page;
 
 import io.appium.java_client.android.AndroidDriver;
-import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -14,7 +13,7 @@ public class App extends BasePage{
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
         desiredCapabilities.setCapability("platformName", "android");
         desiredCapabilities.setCapability("deviceName", "device");
-        // desiredCapabilities.setCapability("app", "F:\\xmind\\com.xueqiu.android_11.31_232.apk");
+        // desiredCapabilities.setCapability("appium", "F:\\xmind\\com.xueqiu.android_11.31_232.apk");
         desiredCapabilities.setCapability("appPackage", "com.xueqiu.android");
         desiredCapabilities.setCapability("appActivity", ".view.WelcomeActivityAlias");
         desiredCapabilities.setCapability("autoGrantPermissions","true");
@@ -45,16 +44,21 @@ public class App extends BasePage{
 
     }
 
-    public static SearchPage toSearch() {
+    public static searchPage toSearch() {
        // driver.findElementById("home_search").click();
-        By homeSearch = By.id("home_search");
-        driver.findElement(homeSearch).click();
-        return new SearchPage();
+
+       /* By homeSearch = By.id("home_search");
+        driver.findElement(homeSearch).click();*/
+        BasePage basePage = new BasePage();
+        basePage.parseSteps("/appium/page/App.yaml","toSearch");
+        return new searchPage();
     }
 
     public static StockPage toStocks(){
         //click(By.xpath("//*[@resource-id='android:id/tabs']/android.widget.RelativeLayout[2]"));
-        click(By.xpath("//*[contains(@resource-id,'tab_name')and @text='自选']"));
+       // click(By.xpath("//*[contains(@resource-id,'tab_name')and @text='自选']"));
+        BasePage basePage = new BasePage();
+        basePage.parseSteps("/appium/page/App.yaml","toStocks");
         return new StockPage();
     }
 

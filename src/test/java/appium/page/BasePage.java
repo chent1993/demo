@@ -1,5 +1,9 @@
 package appium.page;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import io.appium.java_client.MobileBy;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.touch.offset.PointOption;
@@ -7,12 +11,32 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class BasePage {
     public static AndroidDriver driver;
+
+    public HashMap<String, Object> getParams() {
+        return params;
+    }
+
+    public void setParams(HashMap<String, Object> params) {
+        this.params = params;
+    }
+
+    private HashMap<String,Object> params=new HashMap<>();
+
+    public HashMap<String, Object> getResults() {
+        return results;
+    }
+
+    private HashMap<String,Object> results=new HashMap<>();
+
 
     public WebElement findElement(By by){
         System.out.println(by);
@@ -95,4 +119,69 @@ public class BasePage {
         })*/;
 
     }
+
+    /**
+     * 解析步骤
+     * @param method
+     */
+    public void parseSteps(String method){
+        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+        String path = "/"+this.getClass().getCanonicalName().replace(".","/")+".yaml";
+        TypeReference<HashMap<String, TestCaseSteps>> trf = new TypeReference<HashMap<String, TestCaseSteps>>(){};
+        try {
+            HashMap<String, TestCaseSteps> steps = mapper.readValue(this.getClass().getResourceAsStream(path),
+                     trf);
+
+            System.out.println(steps.get(method));
+            parseSteps(steps.get(method));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void parseSteps(){
+        parseSteps(Thread.currentThread().getStackTrace()[2].getMethodName());
+    }
+
+    public void parseSteps(String path,String method){
+        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+        TypeReference<HashMap<String, TestCaseSteps>> trf = new TypeReference<HashMap<String, TestCaseSteps>>(){};
+        try {
+            HashMap<String, TestCaseSteps> steps = mapper.readValue(BasePage.class.getResourceAsStream(path),
+                    trf);
+
+            parseSteps(steps.get(method));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void parseSteps(TestCaseSteps steps){
+        steps.getSteps().forEach(step -> {
+            WebElement element=null;
+            if (step.get("id")!=null){
+                element=driver.findElement(By.id(step.get("id")));
+            }else if (step.get("xpath")!=null){
+                element=driver.findElement(By.xpath(step.get("xpath")));
+            }else if (step.get("aid")!=null){
+                element=driver.findElement(MobileBy.AccessibilityId(step.get("aid")));
+            }
+
+            if (step.get("send")!=null){
+                String send =step.get("send");
+                //配置文件中解决变量替换
+                for (Map.Entry<String,Object> kv:params.entrySet()){
+                    if(send.contains("{"+kv.getKey()+"}"))
+                        send = send.replace("{"+kv.getKey()+"}",kv.getValue().toString());
+                }
+                element.sendKeys(send);
+            }else if(step.get("get")!=null){
+                String text = element.getAttribute(step.get("get"));
+                results.put(step.get("dump"),text);
+            }else {
+                element.click();
+            }
+        });
+    }
+
+
 }

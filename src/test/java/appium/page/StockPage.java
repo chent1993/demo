@@ -9,11 +9,13 @@ import java.util.List;
 public class StockPage extends BasePage{
 
     public StockPage deleteAll(){
-        click(By.id("com.xueqiu.android:id/edit_group"));
+       /* click(By.id("com.xueqiu.android:id/edit_group"));
         click(By.id("com.xueqiu.android:id/check_all"));
         click(By.id("com.xueqiu.android:id/cancel_follow"));
         click(By.id("com.xueqiu.android:id/md_buttonDefaultPositive"));
-        click(By.id("com.xueqiu.android:id/action_close"));
+        click(By.id("com.xueqiu.android:id/action_close"));*/
+        BasePage basePage = new BasePage();
+        basePage.parseSteps("/appium/page/StockPage.yaml","deleteAll");
         return this;
     }
 
@@ -36,9 +38,9 @@ public class StockPage extends BasePage{
        return this;
     }
 
-    public  SearchPage toSearch(){
+    public searchPage toSearch(){
         click(By.id("com.xueqiu.android:id/action_search"));
-        return new SearchPage();
+        return new searchPage();
     }
 
 }

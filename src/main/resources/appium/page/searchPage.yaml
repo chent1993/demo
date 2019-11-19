@@ -1,0 +1,23 @@
+search:
+  steps:
+  - id: search_input_text
+    #变量需要加“”；也可使用${},解析时使用"${"+   +"}"
+    send: "{keyword}"
+#    send: pinduoduo
+  - id: name
+# - xpath: //*[@text='PDD']
+
+getCurrentPrice:
+  steps:
+    - id: current_price
+      get:  text
+      dump: price
+
+cancel:
+  steps:
+    - id: action_close
+
+addSearch:
+  steps:
+    - id: follow_btn
+    - id: md_buttonDefaultNegative
