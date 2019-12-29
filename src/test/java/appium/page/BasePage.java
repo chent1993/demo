@@ -1,6 +1,5 @@
 package appium.page;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.appium.java_client.MobileBy;
@@ -21,6 +20,16 @@ import java.util.concurrent.TimeUnit;
 public class BasePage {
     public static AndroidDriver driver;
 
+    /**
+     * 测试步骤参数化
+     */
+    private HashMap<String,Object> params=new HashMap<>();
+
+    /**
+     * 测试步骤参数读取
+     */
+    private HashMap<String,Object> results=new HashMap<>();
+
     public HashMap<String, Object> getParams() {
         return params;
     }
@@ -29,15 +38,16 @@ public class BasePage {
         this.params = params;
     }
 
-    private HashMap<String,Object> params=new HashMap<>();
-
     public HashMap<String, Object> getResults() {
         return results;
     }
+    private PageObjectModel model=new PageObjectModel();
 
-    private HashMap<String,Object> results=new HashMap<>();
-
-
+    /**
+     * 通用元素定位和异常处理机制
+     * @param by
+     * @return
+     */
     public WebElement findElement(By by){
         System.out.println(by);
         try {
@@ -127,16 +137,14 @@ public class BasePage {
     public void parseSteps(String method){
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         String path = "/"+this.getClass().getCanonicalName().replace(".","/")+".yaml";
-        TypeReference<HashMap<String, TestCaseSteps>> trf = new TypeReference<HashMap<String, TestCaseSteps>>(){};
-        try {
-            HashMap<String, TestCaseSteps> steps = mapper.readValue(this.getClass().getResourceAsStream(path),
-                     trf);
+                /*TypeReference<HashMap<String, PageObjectMethod>> trf = new TypeReference<HashMap<String, PageObjectMethod>>(){};
+                HashMap<String, PageObjectMethod> steps = mapper.readValue(this.getClass().getResourceAsStream(path),
+                         trf);*/
+                /*PageObjectModel model = mapper.readValue(this.getClass().getResourceAsStream(path),PageObjectModel.class);
+                System.out.println(model.methods.get(method));
+                parseSteps(model.methods.get(method));*/
+            parseSteps(path,method);
 
-            System.out.println(steps.get(method));
-            parseSteps(steps.get(method));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void parseSteps(){
@@ -145,17 +153,27 @@ public class BasePage {
 
     public void parseSteps(String path,String method){
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-        TypeReference<HashMap<String, TestCaseSteps>> trf = new TypeReference<HashMap<String, TestCaseSteps>>(){};
+       // TypeReference<HashMap<String, PageObjectMethod>> trf = new TypeReference<HashMap<String, PageObjectMethod>>(){};
         try {
-            HashMap<String, TestCaseSteps> steps = mapper.readValue(BasePage.class.getResourceAsStream(path),
-                    trf);
-
-            parseSteps(steps.get(method));
+           /* HashMap<String, PageObjectMethod> steps = mapper.readValue(BasePage.class.getResourceAsStream(path),
+                    trf);*/
+           /* PageObjectModel */model = mapper.readValue(PageObjectModel.class.getResourceAsStream(path),PageObjectModel.class);
+            parseSteps(model.methods.get(method));
+            //parseSteps(steps.get(method));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    private void parseSteps(TestCaseSteps steps){
+    /*private void parseModel(PageObjectModel model){
+        model.methods.forEach(method->{
+
+                }
+        );
+    }*/
+    private void parseElement(){
+
+    }
+    private void parseSteps(PageObjectMethod steps){
         steps.getSteps().forEach(step -> {
             WebElement element=null;
             if (step.get("id")!=null){
@@ -164,6 +182,9 @@ public class BasePage {
                 element=driver.findElement(By.xpath(step.get("xpath")));
             }else if (step.get("aid")!=null){
                 element=driver.findElement(MobileBy.AccessibilityId(step.get("aid")));
+            }else if(step.get("element")!=null){//获取element元素
+                System.out.println(model.elements.get(step.get("element").toString()));
+                element= driver.findElement(model.elements.get(step.get("element")).getLocator("android","4.5"));
             }
 
             if (step.get("send")!=null){

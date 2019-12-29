@@ -54,6 +54,7 @@ public class TestSearch {
     public void search(){
         assertThat(searchPage.search(stock).getCurrentPrice(), greaterThanOrEqualTo(price.floatValue()));
     }
+
     @After
     public void after(){
         searchPage.cancel();

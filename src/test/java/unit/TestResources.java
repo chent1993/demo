@@ -1,9 +1,8 @@
 package unit;
 
 
-import appium.page.TestCaseSteps;
+import appium.page.PageObjectMethod;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.apache.commons.io.FileUtils;
@@ -73,9 +72,8 @@ public class TestResources {
     @Test
     void steps() throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        HashMap<String, TestCaseSteps> steps = new HashMap<>();
-        TestCaseSteps stepcase = new TestCaseSteps();
+        HashMap<String, PageObjectMethod> steps = new HashMap<>();
+        PageObjectMethod stepcase = new PageObjectMethod();
         HashMap<String, String> map= new HashMap<>();
         map.put("id","aaa");
         map.put("send","xxxxx");

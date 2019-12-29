@@ -8,7 +8,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 public class App extends BasePage{
-
+//todo:App单例
     public static void start() throws MalformedURLException {
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
         desiredCapabilities.setCapability("platformName", "android");
@@ -21,8 +21,10 @@ public class App extends BasePage{
         URL remoteUrl = new URL("http://127.0.0.1:4723/wd/hub");
 
         driver = new AndroidDriver(remoteUrl, desiredCapabilities);
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        System.out.println(driver.getCapabilities().getPlatform().toString().toLowerCase());
+        System.out.println(driver.getCapabilities().getVersion());
        /* handleAlert();
         new WebDriverWait(driver,30).until(ExpectedConditions.visibilityOfElementLocated(By.id("home_search")));*/
 

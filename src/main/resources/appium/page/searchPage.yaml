@@ -1,23 +1,35 @@
-search:
-  steps:
-  - id: search_input_text
-    #变量需要加“”；也可使用${},解析时使用"${"+   +"}"
-    send: "{keyword}"
-#    send: pinduoduo
-  - id: name
-# - xpath: //*[@text='PDD']
+elements:
+  search_input_text:
+    element:
+     -  id: search_input_text
+        os: android
+        version:  4.5
+     -  id: seach_eidt
+        os: ios
+     -  xpath:  search_input_text
+        os: android
+        version:  4.4
+methods:
+  search:
+    steps:
+      - element: search_input_text
+        #变量需要加“”；也可使用${},解析时使用"${"+   +"}"
+        send: "{keyword}"
+      #    send: pinduoduo
+      - id: name
+  # - xpath: //*[@text='PDD']
 
-getCurrentPrice:
-  steps:
-    - id: current_price
-      get:  text
-      dump: price
+  getCurrentPrice:
+    steps:
+      - id: current_price
+        get:  text
+        dump: price
 
-cancel:
-  steps:
-    - id: action_close
+  cancel:
+    steps:
+      - id: action_close
 
-addSearch:
-  steps:
-    - id: follow_btn
-    - id: md_buttonDefaultNegative
+  addSearch:
+    steps:
+      - id: follow_btn
+      - id: md_buttonDefaultNegative
